@@ -1,7 +1,7 @@
 galaxy_info:
   author: ziyad-ops
   description: pgbouncer role
-  company: innosoft.sa
+  company: ziyad-ops
   role_name: pgbouncer
   namespace: pgbouncer
   license: MIT
