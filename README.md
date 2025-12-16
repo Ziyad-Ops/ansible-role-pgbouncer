@@ -69,7 +69,7 @@ ansible-galaxy install ziyad-ops.pgbouncer
 ```bash
 # Using requirements.yml
 cat << EOF > requirements.yml
-- src: https://github.com/yourusername/ansible-role-pgbouncer.git
+- src: https://github.com/ziyad-ops/ansible-role-pgbouncer.git
   name: pgbouncer
   version: main
 EOF
@@ -80,7 +80,7 @@ ansible-galaxy install -r requirements.yml
 ### Install Manually
 
 ```bash
-git clone https://github.com/yourusername/ansible-role-pgbouncer.git roles/pgbouncer
+git clone https://github.com/ziyad-ops/ansible-role-pgbouncer.git roles/pgbouncer
 ```
 
 ---
