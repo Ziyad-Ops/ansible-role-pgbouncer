@@ -1,0 +1,24 @@
+---
+# Purpose: bring the instance to the desired state by running the role under test.
+# Molecule calls this playbook with molecule converge.
+- name: Deploy Postgres for testing
+  hosts: all
+  become: true
+  tasks:
+    - name: Run Postgres container
+      community.docker.docker_container:
+        name: postgres-15
+        image: postgres:15
+        restart_policy: always
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: admin
+          POSTGRES_DB: db1
+        ports:
+          - "5432:5432"
+
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - role: ../../../ansible-role-pgbouncer

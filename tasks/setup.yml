@@ -1,0 +1,60 @@
+---
+- name: PgBouncer - Create group
+  ansible.builtin.group:
+    name: "{{ pgbouncer_group }}"
+    gid: "{{ pgbouncer_gid }}"
+    system: true
+  tags:
+    - pgbouncer
+
+- name: PgBouncer - Create user
+  ansible.builtin.user:
+    name: "{{ pgbouncer_user }}"
+    uid: "{{ pgbouncer_uid }}"
+    group: "{{ pgbouncer_group }}"
+    system: true
+    shell: /bin/false
+  tags:
+    - pgbouncer
+
+- name: PgBouncer - Config directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ pgbouncer_user }}"
+    group: "{{ pgbouncer_group }}"
+  loop:
+    - "{{ pgbouncer_home_path }}"
+    - "{{ pgbouncer_config_path }}"
+  tags:
+    - pgbouncer
+
+- name: Pgbouncer - Check if pgbouncer container is running
+  community.docker.docker_container_info:
+    name: "{{ pgbouncer_container_name }}"
+  register: pgbouncer_container_info
+  tags:
+    - pgbouncer
+
+- name: PgBouncer - Configure container
+  ansible.builtin.template:
+    src: pgbouncer.ini.j2
+    dest: "{{ pgbouncer_config_path }}/pgbouncer.ini"
+    owner: "{{ pgbouncer_user }}"
+    group: "{{ pgbouncer_group }}"
+    mode: '0644'
+  notify: PgBouncer - Restart container
+  tags:
+    - pgbouncer
+
+- name: PgBouncer - Configure userlist
+  ansible.builtin.template:
+    src: userlist.txt.j2
+    dest: "{{ pgbouncer_config_path }}/userlist.txt"
+    owner: "{{ pgbouncer_user }}"
+    group: "{{ pgbouncer_group }}"
+    mode: '0640'
+  notify: PgBouncer - Restart container
+  tags:
+    - pgbouncer

@@ -1,0 +1,15 @@
+---
+- name: Create stage
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Create molecule instance(s)
+      community.docker.docker_container:
+        name: "{{ item.name }}"
+        image: "{{ item.image }}"
+        state: started
+        command: "{{ item.command }}"
+        privileged: "{{ item.privileged }}"
+        tmpfs: "{{ item.tmpfs }}"
+      with_items: "{{ molecule_yml.platforms }}"

@@ -1,0 +1,54 @@
+---
+# defaults file for ansible-role-pgbouncer
+
+# Docker settings
+pgbouncer_docker_image: "edoburu/pgbouncer"
+pgbouncer_docker_tag: "v1.24.1-p1"
+pgbouncer_container_name: "pgbouncer"
+pgbouncer_restart_policy: "always"
+postgres_ip: "{{ ansible_default_ipv4.address }}"
+
+pgbouncer_user: "postgres"
+pgbouncer_uid: 70
+pgbouncer_group: "postgres"
+pgbouncer_gid: 70
+
+# Directory paths
+pgbouncer_home_path: "/opt/pgbouncer"
+pgbouncer_config_path: "{{ pgbouncer_home_path }}/{{ pgbouncer_container_name }}"
+
+# Network settings
+pgbouncer_listen_port: 6432
+pgbouncer_host_port: "{{ pgbouncer_listen_port }}"
+
+# Pool settings
+pgbouncer_pool_mode: "transaction"
+pgbouncer_max_client_conn: 200
+pgbouncer_default_pool_size: 30
+
+# Authentication
+pgbouncer_auth_type: "scram-sha-256"
+pgbouncer_auth_query: "SELECT username, password FROM pgbouncer.get_auth($1)"
+pgbouncer_auth_user: "pgbouncer_auth"
+pgbouncer_stats_users: "pgbouncer_monitor"
+pgbouncer_auth_dbname: "postgres"
+pgbouncer_admin_users: "pgbouncer"
+
+# Database configurations
+pgbouncer_databases:
+  - name: '*'
+    host: "{{ postgres_ip }}"
+    port: 5432
+
+pgbouncer_users:
+  # this user will be used for admin console
+  - username: postgres
+    password: admin
+
+  # this user will be used for monitoring
+  - username: pgbouncer_monitor
+    password: Monitor
+
+  # this user will be used for auth_query
+  - username: pgbouncer_auth
+    password: auth

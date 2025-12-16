@@ -1,0 +1,15 @@
+---
+- name: PgBouncer - Deploy container
+  community.docker.docker_container:
+    name: "{{ pgbouncer_container_name }}"
+    image: "{{ pgbouncer_docker_image }}:{{ pgbouncer_docker_tag }}"
+    state: started
+    restart_policy: "{{ pgbouncer_restart_policy }}"
+    user: "{{ pgbouncer_user }}:{{ pgbouncer_group }}"
+    ports:
+      - "{{ pgbouncer_host_port }}:{{ pgbouncer_listen_port }}"
+    volumes:
+      - "{{ pgbouncer_config_path }}/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro"
+      - "{{ pgbouncer_config_path }}/userlist.txt:/etc/pgbouncer/userlist.txt:ro"
+  tags:
+    - pgbouncer

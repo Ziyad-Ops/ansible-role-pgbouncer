@@ -1,0 +1,29 @@
+---
+# Purpose: assert that the instance really ended up in the expected state.
+# Molecule calls this playbook with `molecule verify`.
+- name: Verify pgbouncer role
+  hosts: all
+  tasks:
+    - name: Check if pgbouncer container is running
+      community.docker.docker_container_info:
+        name: pgbouncer
+      register: pgbouncer_info
+
+    - name: Assert pgbouncer is running
+      ansible.builtin.assert:
+        that:
+          - pgbouncer_info.container.State.Running
+        fail_msg: "pgbouncer container is not running"
+        success_msg: "pgbouncer container is running"
+
+    - name: Check if pgbouncer file exists
+      ansible.builtin.stat:
+        path: /opt/pgbouncer
+      register: pgbouncer_stat
+
+    - name: Assert pgbouncer file is present
+      ansible.builtin.assert:
+        that:
+          - pgbouncer_stat.stat.exists
+        fail_msg: "pgbouncer missing at /opt/pgbouncer"
+        success_msg: "pgbouncer exists"

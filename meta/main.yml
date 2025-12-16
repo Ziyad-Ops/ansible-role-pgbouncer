@@ -1,0 +1,23 @@
+galaxy_info:
+  author: ziyad-ops
+  description: pgbouncer role
+  company: innosoft.sa
+  role_name: pgbouncer
+  namespace: pgbouncer
+  license: MIT
+
+  min_ansible_version: "2.1"
+
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - jammy
+
+  galaxy_tags:
+    - pgbouncer
+
+dependencies: []

@@ -1,0 +1,38 @@
+---
+driver:
+  name: docker
+
+platforms:
+  - name: molecule
+    image: ziayd/ansible-molecule:v1.0.0
+    privileged: true
+    pre_build_image: true
+    command: ["sh", "-c", "dockerd --storage-driver=overlay2 & sleep infinity"]
+    tmpfs:
+      - /run
+      - /var/lib/docker
+
+provisioner:
+  name: ansible
+  playbooks:
+    create: create.yml
+    converge: converge.yml
+    destroy: destroy.yml
+    verify: verify.yml
+  inventory:
+    host_vars:
+      ubuntu24:
+        ansible_user: root
+
+verifier:
+  name: ansible
+
+scenario:
+  name: default
+  test_sequence:
+    - destroy
+    - create
+    - converge
+    - idempotence
+    - verify
+    - destroy

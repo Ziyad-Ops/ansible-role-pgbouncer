@@ -1,0 +1,11 @@
+---
+# tasks file for ansible-role-pgbouncer
+- name: PgBouncer - import setup task
+  ansible.builtin.import_tasks: setup.yml
+  tags:
+    - pgbouncer
+
+- name: PgBouncer - import run task
+  ansible.builtin.import_tasks: run.yml
+  tags:
+    - pgbouncer
